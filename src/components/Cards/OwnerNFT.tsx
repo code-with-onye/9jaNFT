@@ -17,6 +17,8 @@ import Web3Modal from "web3modal";
 import { nftaddress, nftmarketaddress } from "../../config";
 import Market from "../../abi/NFTMarket.json";
 import NFT from "../../abi/NFT.json";
+import AudioPlayer from "../AudioPlayer";
+import { AudioPlayerProvider } from "react-use-audio-player";
 
 export interface OwnerNFTProps {
   className?: string;
@@ -71,6 +73,7 @@ const OwnerNFT: FC<OwnerNFTProps> = ({
           sold: i.sold,
           name: meta.data.name,
           image: meta.data.image,
+          audio: meta.data.audio,
         };
         return item;
       })
@@ -81,51 +84,6 @@ const OwnerNFT: FC<OwnerNFTProps> = ({
     setNfts(items);
     setLoading(false);
   }
-
-  const renderIcon = (state?: "playing" | "loading") => {
-    if (!state) {
-      return (
-        <svg className="ml-0.5 w-9 h-9" fill="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.5"
-            d="M18.25 12L5.75 5.75V18.25L18.25 12Z"
-          ></path>
-        </svg>
-      );
-    }
-
-    return (
-      <svg className=" w-9 h-9" fill="none" viewBox="0 0 24 24">
-        <path
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.5"
-          d="M15.25 6.75V17.25"
-        ></path>
-        <path
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.5"
-          d="M8.75 6.75V17.25"
-        ></path>
-      </svg>
-    );
-  };
-
-  const renderListenButtonDefault = (state?: "playing" | "loading") => {
-    return (
-      <div
-        className={`w-14 h-14 flex items-center justify-center rounded-full bg-neutral-50 text-primary-500 cursor-pointer`}
-      >
-        {renderIcon(state)}
-      </div>
-    );
-  };
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
@@ -160,13 +118,9 @@ const OwnerNFT: FC<OwnerNFTProps> = ({
               <div className={`flex-grow flex justify-center`}>
                 <img src={musicWave} alt="musicWave" />
               </div>
-              <ButtonPlayMusicRunningContainer
-                className="relative z-10"
-                nftId={DEMO_NFT_ID}
-                renderDefaultBtn={() => renderListenButtonDefault()}
-                renderPlayingBtn={() => renderListenButtonDefault("playing")}
-                renderLoadingBtn={() => renderListenButtonDefault("loading")}
-              />
+              <AudioPlayerProvider>
+                <AudioPlayer file={nft.audio} />
+              </AudioPlayerProvider>
             </div>
 
             <div

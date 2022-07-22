@@ -12,6 +12,8 @@ import RemainingTimeNftCard from "../RemainingTimeNftCard";
 import { ethers } from "ethers";
 import axios from "axios";
 import Web3Modal from "web3modal";
+import AudioPlayer from "../AudioPlayer";
+import { AudioPlayerProvider } from "react-use-audio-player";
 
 import { nftaddress, nftmarketaddress } from "../../config";
 import Market from "../../abi/NFTMarket.json";
@@ -68,6 +70,7 @@ const SoldNFT: FC<SoldNFTProps> = ({
           sold: i.sold,
           name: meta.data.name,
           image: meta.data.image,
+          audio: meta.data.audio,
         };
         return item;
       })
@@ -159,17 +162,9 @@ const SoldNFT: FC<SoldNFTProps> = ({
                   <div className={`flex-grow flex justify-center`}>
                     <img src={musicWave} alt="musicWave" />
                   </div>
-                  <ButtonPlayMusicRunningContainer
-                    className="relative z-10"
-                    nftId={DEMO_NFT_ID}
-                    renderDefaultBtn={() => renderListenButtonDefault()}
-                    renderPlayingBtn={() =>
-                      renderListenButtonDefault("playing")
-                    }
-                    renderLoadingBtn={() =>
-                      renderListenButtonDefault("loading")
-                    }
-                  />
+                  <AudioPlayerProvider>
+                    <AudioPlayer file={nft.audio} />
+                  </AudioPlayerProvider>
                 </div>
 
                 <div
